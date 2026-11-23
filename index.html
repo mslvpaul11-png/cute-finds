@@ -1,5 +1,129 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Cute Finds — a curated edit of classic, cozy and useful little things for everyday life."><title>Cute Finds | The little things, thoughtfully found</title><style>
 :root{--bg:#f7f4ee;--ink:#302b26;--muted:#756d63;--accent:#a17d63;--line:#e4ddd3;--white:#fffdf9}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}a{color:inherit}.announcement{text-align:center;background:#e8dfd3;padding:10px;font-size:11px;letter-spacing:1.6px;text-transform:uppercase}.header{max-width:1200px;margin:auto;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}.logo{font-family:Georgia,serif;font-size:32px;letter-spacing:.3px}.nav{display:flex;gap:24px;font-size:12px;text-transform:uppercase;letter-spacing:1.2px}.nav a{text-decoration:none}.hero{max-width:1200px;margin:28px auto;padding:0 5%;display:grid;grid-template-columns:1.02fr 1fr;gap:30px;align-items:center}.hero-text{padding:25px 0}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent)}h1,h2,h3{font-family:Georgia,serif;font-weight:normal}h1{font-size:clamp(42px,6vw,72px);line-height:1.08;margin:16px 0} .hero p{color:var(--muted);line-height:1.8;max-width:450px}.hero-img{width:100%;height:440px;object-fit:cover}.button{display:inline-block;background:var(--ink);color:white;text-decoration:none;padding:14px 24px;margin-top:15px;font-size:12px;letter-spacing:1px;text-transform:uppercase}.section{max-width:1200px;margin:60px auto;padding:0 5%}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}.section-head h2{font-size:36px;margin:8px 0}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.filter{background:transparent;border:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font-size:12px}.filter.active{background:var(--ink);color:#fff}.search{border:1px solid var(--line);padding:12px;background:var(--white);width:min(100%,280px)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:var(--white);padding:0 0 18px}.card img{width:100%;height:290px;object-fit:cover;background:#e6e0d8}.card .tag{display:inline-block;margin:15px 16px 0;color:var(--accent);font-size:10px;letter-spacing:1.5px;text-transform:uppercase}.card h3{margin:9px 16px;font-size:22px}.card p{margin:0 16px;color:var(--muted);font-size:13px;line-height:1.6}.card .buy{display:block;margin:16px;background:transparent;border:1px solid var(--ink);padding:12px;text-align:center;text-decoration:none;font-size:11px;text-transform:uppercase;letter-spacing:1px}.card .buy:hover{background:var(--ink);color:#fff}.about{background:#e9e2d8;padding:55px 8%;text-align:center}.about h2{font-size:38px}.about p{max-width:680px;margin:auto;line-height:1.8;color:var(--muted)}.footer{padding:35px 5%;text-align:center;color:var(--muted);font-size:12px;line-height:1.8}.footer a{margin:0 10px}.disclosure{max-width:800px;margin:15px auto;font-size:11px;color:var(--muted)}@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.hero-img{height:330px}.nav{gap:12px}.section-head{align-items:start;flex-direction:column}}@media(max-width:520px){.logo{font-size:27px}.header{align-items:flex-start;flex-direction:column;gap:14px}.grid{gap:10px}.card img{height:210px}.card h3{font-size:19px}.card p{font-size:12px}.section{margin:40px auto}.hero{margin:15px auto}.hero-img{height:280px}.search{width:100%}}
-</style></head><body><div class="announcement">A curated collection of little things we love</div><header class="header"><div class="logo">Cute Finds</div><nav class="nav"><a href="#shop">Shop</a><a href="#about">Our Edit</a><a href="https://pin.it/2PXjLtTG4" target="_blank" rel="noopener">Pinterest ↗</a><a href="admin.html">Admin</a></nav></header><main><section class="hero"><div class="hero-text"><div class="eyebrow">Thoughtfully picked · Everyday inspiration</div><h1>The little things,<br>beautifully found.</h1><p>Discover charming finds for your home, wardrobe, routines and everyday moments. A classic, curated edit — with a little something for everyone.</p><a class="button" href="#shop">Explore the finds</a></div><img class="hero-img" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85" alt="Warm classic interior"></section><section class="section" id="shop"><div class="section-head"><div><div class="eyebrow">The curated collection</div><h2>Find your favorites</h2></div><input class="search" id="search" type="search" placeholder="Search the collection…" aria-label="Search products"></div><div class="filters" id="filters"></div><div class="grid" id="products"></div></section><section class="about" id="about"><div class="eyebrow">Welcome to Cute Finds</div><h2>A little inspiration for everyday life.</h2><p>We collect lovely, useful and timeless finds across home, fashion, beauty and more. Browse at your own pace, find something you love, and follow along for fresh inspiration.</p><p><a href="https://pin.it/2PXjLtTG4" target="_blank" rel="noopener">Follow us on Pinterest</a></p></section></main><footer class="footer"><div class="logo">Cute Finds</div><p>Made for the things that make everyday feel lovely.</p><p><a href="https://pin.it/2PXjLtTG4" target="_blank" rel="noopener">Pinterest</a></p><div class="disclosure">Affiliate disclosure: Cute Finds may earn a commission from qualifying purchases made through links on this site, at no additional cost to you. As an Amazon Associate, we earn from qualifying purchases. Replace this disclosure with the wording appropriate to your enrolled Amazon program and region.</div><p>© <span id="year"></span> Cute Finds</p></footer><script src="products.js"></script><script>
+</style></head><body><div class="announcement">A curated collection of little things we love</div><header class="header"><div class="logo">Cute Finds</div><nav class="nav"><a href="#shop">Shop</a><a href="#about">Our Edit</a><a href="https://pin.it/2PXjLtTG4" target="_blank" rel="noopener">Pinterest ↗</a><a href="admin.html">Admin</a></nav></header><main><section class="hero"><div class="hero-text"><div class="eyebrow">Thoughtfully picked · Everyday inspiration</div><h1>The little things,<br>beautifully found.</h1><p>Discover charming finds for your home, wardrobe, routines and everyday moments. A classic, curated edit — with a little something for everyone.</p><a class="button" href="#shop">Explore the finds</a></div><img class="hero-img" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85" alt="Warm classic interior"></section><section class="section" id="shop"><div class="section-head"><div><div class="eyebrow">The curated collection</div><h2>Find your favorites</h2></div><input class="search" id="search" type="search" placeholder="Search the collection…" aria-label="Search products"></div><div class="filters" id="filters"></div><div class="grid" id="products"></div></section><section class="about" id="about"><div class="eyebrow">Welcome to Cute Finds</div><h2>A little inspiration for everyday life.</h2><p>We collect lovely, useful and timeless finds across home, fashion, beauty and more. Browse at your own pace, find something you love, and follow along for fresh inspiration.</p><p><a href="https://pin.it/2PXjLtTG4" target="_blank" rel="noopener">Follow us on Pinterest</a></p></section></main><footer class="footer"><div class="logo">Cute Finds</div><p>Made for the things that make everyday feel lovely.</p><p><a href="https://pin.it/2PXjLtTG4" target="_blank" rel="noopener">Pinterest</a></p><div class="disclosure">Affiliate disclosure: Cute Finds may earn a commission from qualifying purchases made through links on this site, at no additional cost to you. As an Amazon Associate, we earn from qualifying purchases. Replace this disclosure with the wording appropriate to your enrolled Amazon program and region.</div><p>© <span id="year"></span> Cute Finds</p></footer><script src="products.js"></script>
+<script>
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKOA81iqjtRL7NimzSnFjWfdKneJ72S0J5v1kLp522FDXtsHnJljKKs0ASXrBhGaXDurSQ-E1rIWb2/pub?gid=0&single=true&output=csv";
+
+let liveProducts = products || [];
+let selected = 'All';
+
+const filterBox = document.getElementById('filters');
+const grid = document.getElementById('products');
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = '', quoted = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], next = text[i + 1];
+
+    if (c === '"' && quoted && next === '"') {
+      cell += '"';
+      i++;
+    } else if (c === '"') {
+      quoted = !quoted;
+    } else if (c === ',' && !quoted) {
+      row.push(cell);
+      cell = '';
+    } else if ((c === '\n' || c === '\r') && !quoted) {
+      if (c === '\r' && next === '\n') i++;
+      row.push(cell);
+      if (row.some(v => v.trim() !== '')) rows.push(row);
+      row = [];
+      cell = '';
+    } else {
+      cell += c;
+    }
+  }
+
+  row.push(cell);
+  if (row.some(v => v.trim() !== '')) rows.push(row);
+
+  const headers = rows.shift().map(h => h.trim().toLowerCase());
+
+  return rows.map(r => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (r[i] || '').trim());
+    return obj;
+  });
+}
+
+function makeFilters() {
+  const categories = ['All', ...new Set(liveProducts.map(p => p.category).filter(Boolean))];
+
+  filterBox.innerHTML = categories.map(c =>
+    `<button class="filter ${c === selected ? 'active' : ''}" data-cat="${c}">${c}</button>`
+  ).join('');
+
+  filterBox.querySelectorAll('button').forEach(b => {
+    b.onclick = () => {
+      selected = b.dataset.cat;
+      makeFilters();
+      render();
+    };
+  });
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+
+  const items = liveProducts.filter(p =>
+    (selected === 'All' || p.category === selected) &&
+    (`${p.name} ${p.description} ${p.category}`.toLowerCase().includes(q))
+  );
+
+  grid.innerHTML = items.map(p => `
+    <article class="card">
+      <img src="${p.image}" alt="${p.name}" loading="lazy">
+      <span class="tag">${p.tag || p.category}</span>
+      <h3>${p.name}</h3>
+      <p>${p.description}</p>
+      ${p.price ? `<p style="margin-top:8px">${p.price}</p>` : ''}
+      <a class="buy" href="${p.link}" target="_blank"
+      rel="nofollow sponsored noopener">Shop the find ↗</a>
+    </article>
+  `).join('');
+
+  if (!items.length) grid.innerHTML = '<p>No finds matched your search.</p>';
+}
+
+async function loadProducts() {
+  try {
+    const response = await fetch(SHEET_URL);
+
+    if (!response.ok) throw new Error('Sheet could not be loaded');
+
+    const data = parseCSV(await response.text());
+
+    const sheetProducts = data.filter(p => p.name && p.link).map(p => ({
+      name: p.name,
+      category: p.category || 'Lifestyle',
+      description: p.description || '',
+      price: p.price || '',
+      image: p.image || '',
+      link: p.link,
+      tag: p.tag || p.category || ''
+    }));
+
+    if (sheetProducts.length) {
+      liveProducts = sheetProducts;
+    }
+  } catch (error) {
+    console.error('Google Sheets error:', error);
+  }
+
+  selected = 'All';
+  makeFilters();
+  render();
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('year').textContent = new Date().getFullYear();
+
+makeFilters();
+render();
+loadProducts();
+</script>
+
 let liveProducts=JSON.parse(localStorage.getItem('cuteFindsProducts')||'null')||products;const categories=['All',...new Set(liveProducts.map(p=>p.category))];let selected='All';const filterBox=document.getElementById('filters');const grid=document.getElementById('products');function makeFilters(){filterBox.innerHTML=categories.map(c=>`<button class="filter ${c===selected?'active':''}" data-cat="${c}">${c}</button>`).join('');filterBox.querySelectorAll('button').forEach(b=>b.onclick=()=>{selected=b.dataset.cat;makeFilters();render()})}function render(){let q=document.getElementById('search').value.toLowerCase();let items=liveProducts.filter(p=>(selected==='All'||p.category===selected)&&(`${p.name} ${p.description} ${p.category}`.toLowerCase().includes(q)));grid.innerHTML=items.map(p=>`<article class="card"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="tag">${p.tag||p.category}</span><h3>${p.name}</h3><p>${p.description}</p>${p.price?`<p style="margin-top:8px">${p.price}</p>`:''}<a class="buy" href="${p.link}" target="_blank" rel="nofollow sponsored noopener">Shop the find ↗</a></article>`).join('');if(!items.length)grid.innerHTML='<p>No finds matched your search.</p>'}window.addEventListener('storage',e=>{if(e.key==='cuteFindsProducts'){liveProducts=JSON.parse(e.newValue||'null')||products;selected='All';makeFilters();render()}});document.getElementById('search').addEventListener('input',render);document.getElementById('year').textContent=new Date().getFullYear();makeFilters();render();
 </script></body></html>
