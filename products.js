@@ -1,0 +1,11 @@
+
+const products = [
+  {name:'Everyday little favorite', category:'Lifestyle', description:'A curated find to make everyday moments feel special.', price:'', image:'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=900&q=85', link:'https://link.amazon/B04JJalCb', tag:'Featured'},
+  {name:'Soft neutral home accents', category:'Home', description:'Simple, timeless details for a cozy space.', price:'', image:'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Home edit'},
+  {name:'A little self-care', category:'Beauty', description:'Beauty and self-care essentials worth discovering.', price:'', image:'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Beauty'},
+  {name:'The pretty kitchen find', category:'Kitchen', description:'Useful little upgrades for your kitchen routine.', price:'', image:'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Kitchen'},
+  {name:'Classic everyday accessory', category:'Accessories', description:'A versatile accessory with a classic feel.', price:'', image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Accessories'},
+  {name:'A cozy corner refresh', category:'Home', description:'Create a welcoming corner with a few thoughtful pieces.', price:'', image:'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Cozy'},
+  {name:'Daily essentials', category:'Lifestyle', description:'Practical finds with a timeless, uncomplicated style.', price:'', image:'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Everyday'},
+  {name:'A wardrobe detail', category:'Fashion', description:'A simple style find for everyday outfits.', price:'', image:'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=85', link:'https://www.amazon.com/', tag:'Style'}
+];
