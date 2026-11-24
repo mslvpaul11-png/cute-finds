@@ -1,36 +1,795 @@
+
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cute Finds | Admin</title>
-<style>
-*{box-sizing:border-box}body{margin:0;padding:25px 15px;background:#f7f3ed;color:#3d352e;font-family:Georgia,serif}.container{max-width:650px;margin:30px auto;padding:30px;background:#fffdf9;border:1px solid #e8dfd3;border-radius:12px}h1{text-align:center;font-size:30px;font-weight:normal}.subtitle{text-align:center;color:#8a7b6b;margin-bottom:28px}label{display:block;margin:17px 0 7px;font-size:14px}input,textarea,select{width:100%;padding:12px;border:1px solid #d9cfc2;border-radius:6px;background:white;font:inherit;color:#3d352e}textarea{min-height:85px}button{width:100%;padding:13px;margin-top:20px;border:0;border-radius:6px;background:#75634f;color:white;font:inherit;font-size:16px;cursor:pointer}button:disabled{opacity:.6;cursor:not-allowed}#logoutBtn{background:#a18f7a}#status{margin-top:18px;padding:12px;border-radius:6px;font-size:14px;line-height:1.5;display:none;overflow-wrap:anywhere}.success{display:block!important;background:#eaf3e8;color:#315b35}.error{display:block!important;background:#fbe9e7;color:#963b32}.info{display:block!important;background:#f2eee7;color:#675947}#adminPanel{display:none}#userInfo{text-align:center;color:#75634f}.note{font-size:13px;color:#8a7b6b;line-height:1.5}
-</style></head><body><div class="container"><h1>Cute Finds</h1><p class="subtitle">Admin Product Dashboard</p>
-<div id="loginPanel"><p style="text-align:center">Sign in with your authorized Google account.</p><button id="loginBtn" type="button">Sign in with Google</button></div>
-<div id="adminPanel"><p id="userInfo"></p><form id="productForm">
-<label for="name">Product Name *</label><input id="name" required placeholder="Ivory Ceramic Table Lamp">
-<label for="category">Category *</label><select id="category" required><option value="">Select category</option><option>Home Decor</option><option>Fashion</option><option>Beauty</option><option>Accessories</option><option>Kitchen</option><option>Lifestyle</option><option>Other</option></select>
-<label for="description">Description</label><textarea id="description" placeholder="Short product description"></textarea>
-<label for="price">Price</label><input id="price" placeholder="$29.99">
-<label for="image">Product Image *</label><input type="file" id="image" accept="image/*" required><p class="note">Choose an image smaller than 2 MB. It will be uploaded to Google Drive.</p>
-<label for="link">Amazon Affiliate Link *</label><input type="url" id="link" required placeholder="Paste your Amazon affiliate link">
-<label for="tag">Tag</label><input id="tag" placeholder="Bestseller, New, Trending">
-<button id="uploadBtn" type="submit">Upload Product</button></form><button id="logoutBtn" type="button">Logout</button></div><div id="status" role="status" aria-live="polite"></div></div>
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,setPersistence,browserLocalPersistence,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-const firebaseConfig={apiKey:"AIzaSyB2iH6w2TJsPQs8TX9ZykJ7zAzfz1Fi-dM",authDomain:"cute-finds-admin.firebaseapp.com",projectId:"cute-finds-admin",storageBucket:"cute-finds-admin.firebasestorage.app",messagingSenderId:"161451262975",appId:"1:161451262975:web:8870d4fd6e506dabc15dca",measurementId:"G-DF6C97NFD0"};
-const ALLOWED_EMAIL="mslvpaul.11@gmail.com";
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycby-xED-OI6BASpaVbZHD0HKFahPt5kBzId7DkpTqBWs6fOcsxFsulHjGMnenkXnbTWV/exec";
-const auth=getAuth(initializeApp(firebaseConfig)),provider=new GoogleAuthProvider(),$=id=>document.getElementById(id);
-function status(m,c){$("status").textContent=m;$("status").className=c;}function clear(){ $("status").textContent="";$("status").className="";}
-$("loginBtn").onclick=async()=>{clear();$("loginBtn").disabled=true;try{await setPersistence(auth,browserLocalPersistence);let r=await signInWithPopup(auth,provider);if((r.user.email||"").toLowerCase()!==ALLOWED_EMAIL){await signOut(auth);status("Access denied. This Google account is not authorized.","error");}}catch(e){status("Login error: "+e.message,"error");}finally{$("loginBtn").disabled=false;}};
-onAuthStateChanged(auth,async u=>{if(u&&u.email&&u.email.toLowerCase()===ALLOWED_EMAIL){$("loginPanel").style.display="none";$("adminPanel").style.display="block";$("userInfo").textContent="Welcome, Admin! "+u.email;}else{$("loginPanel").style.display="block";$("adminPanel").style.display="none";if(u){await signOut(auth);status("Access denied.","error");}}});
-$("logoutBtn").onclick=async()=>{try{await signOut(auth);$("productForm").reset();clear();}catch(e){status("Logout error: "+e.message,"error");}};
-function toBase64(f){return new Promise((ok,no)=>{let r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=()=>no(Error("Could not read image."));r.readAsDataURL(f);});}
-$("productForm").addEventListener("submit",async e=>{e.preventDefault();clear();let u=auth.currentUser;if(!u||!u.email||u.email.toLowerCase()!==ALLOWED_EMAIL){status("Please sign in with the authorized account.","error");return;}let f=$("image").files[0];if(!f||!f.type.startsWith("image/")){status("Please select a valid image.","error");return;}if(f.size>2*1024*1024){status("Choose an image smaller than 2 MB.","error");return;}
-$("uploadBtn").disabled=true;$("uploadBtn").textContent="Sending...";
-try{let data={authToken:await u.getIdToken(true),name:$("name").value.trim(),category:$("category").value,description:$("description").value.trim(),price:$("price").value.trim(),imageBase64:await toBase64(f),imageMimeType:f.type,imageName:f.name,link:$("link").value.trim(),tag:$("tag").value.trim()};
-let resp=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data),redirect:"follow"});
-let txt=await resp.text(),res;try{res=JSON.parse(txt);}catch(_){throw Error("Backend did not return JSON. Most likely the Apps Script deployment is not set to 'Anyone' or is outdated. Response started with: "+txt.slice(0,120));}
-if(!res.ok)throw Error(res.error||"Unknown backend error");
-status("Product saved to the Sheet! (row "+res.row+"). It can take a few minutes to appear on the live site.","success");$("productForm").reset();
-}catch(err){status("Upload request error: "+err.message,"error");}finally{$("uploadBtn").disabled=false;$("uploadBtn").textContent="Upload Product";}});
-</script></body></html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cute Finds | Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px 15px;
+            background: #f7f3ed;
+            color: #3d352e;
+            font-family: Georgia, serif;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #fffdf9;
+            border: 1px solid #e8dfd3;
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            font-weight: normal;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8a7b6b;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 17px 0 7px;
+            font-size: 14px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d9cfc2;
+            border-radius: 6px;
+            background: white;
+            font: inherit;
+            color: #3d352e;
+        }
+
+        textarea {
+            min-height: 85px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 20px;
+            border: 0;
+            border-radius: 6px;
+            background: #75634f;
+            color: white;
+            font: inherit;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+        }
+
+        #logoutBtn {
+            background: #a18f7a;
+        }
+
+        #status {
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+            overflow-wrap: anywhere;
+        }
+
+        .success {
+            display: block !important;
+            background: #eaf3e8;
+            color: #315b35;
+        }
+
+        .error {
+            display: block !important;
+            background: #fbe9e7;
+            color: #963b32;
+        }
+
+        .info {
+            display: block !important;
+            background: #f2eee7;
+            color: #675947;
+        }
+
+        #adminPanel {
+            display: none;
+        }
+
+        #userInfo {
+            text-align: center;
+            color: #75634f;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #8a7b6b;
+            line-height: 1.5;
+        }
+
+        a {
+            color: #75634f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Cute Finds</h1>
+
+        <p class="subtitle">
+            Admin Product Dashboard
+        </p>
+
+        <!-- GOOGLE LOGIN -->
+
+        <div id="loginPanel">
+
+            <p style="text-align:center">
+                Sign in with your authorized Google account.
+            </p>
+
+            <button id="loginBtn" type="button">
+                Sign in with Google
+            </button>
+
+        </div>
+
+
+        <!-- ADMIN DASHBOARD -->
+
+        <div id="adminPanel">
+
+            <p id="userInfo"></p>
+
+            <form id="productForm">
+
+                <label for="name">
+                    Product Name *
+                </label>
+
+                <input
+                    id="name"
+                    required
+                    maxlength="160"
+                    placeholder="Ivory Ceramic Table Lamp"
+                >
+
+
+                <label for="category">
+                    Category *
+                </label>
+
+                <select id="category" required>
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option>Home Decor</option>
+                    <option>Fashion</option>
+                    <option>Beauty</option>
+                    <option>Accessories</option>
+                    <option>Kitchen</option>
+                    <option>Lifestyle</option>
+                    <option>Other</option>
+
+                </select>
+
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    maxlength="1000"
+                    placeholder="Short product description"
+                ></textarea>
+
+
+                <label for="price">
+                    Price
+                </label>
+
+                <input
+                    id="price"
+                    maxlength="50"
+                    placeholder="$29.99"
+                >
+
+
+                <label for="image">
+                    Product Image *
+                </label>
+
+                <input
+                    type="file"
+                    id="image"
+                    accept="image/jpeg,image/png,image/webp"
+                    required
+                >
+
+                <p class="note">
+                    Choose a JPG, PNG or WebP image smaller than 2 MB.
+                </p>
+
+
+                <label for="link">
+                    Amazon Affiliate Link *
+                </label>
+
+                <input
+                    type="url"
+                    id="link"
+                    required
+                    placeholder="Paste your full Amazon affiliate link"
+                >
+
+
+                <label for="tag">
+                    Tag
+                </label>
+
+                <input
+                    id="tag"
+                    maxlength="60"
+                    placeholder="Bestseller, New, Trending"
+                >
+
+
+                <button id="uploadBtn" type="submit">
+                    Upload Product
+                </button>
+
+            </form>
+
+
+            <button id="logoutBtn" type="button">
+                Logout
+            </button>
+
+        </div>
+
+
+        <!-- STATUS MESSAGE -->
+
+        <div
+            id="status"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+
+        <p class="note">
+            <a href="index.html">
+                ← Back to storefront
+            </a>
+        </p>
+
+    </div>
+
+
+    <!-- FIREBASE AND JAVASCRIPT -->
+
+    <script type="module">
+
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
+
+        import {
+            getAuth,
+            GoogleAuthProvider,
+            signInWithPopup,
+            setPersistence,
+            browserLocalPersistence,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+
+        // FIREBASE CONFIGURATION
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyB2iH6w2TJsPQs8TX9ZykJ7zAzfz1Fi-dM",
+
+            authDomain: "cute-finds-admin.firebaseapp.com",
+
+            projectId: "cute-finds-admin",
+
+            storageBucket: "cute-finds-admin.firebasestorage.app",
+
+            messagingSenderId: "161451262975",
+
+            appId: "1:161451262975:web:8870d4fd6e506dabc15dca",
+
+            measurementId: "G-DF6C97NFD0"
+
+        };
+
+
+        // ADMIN EMAIL AND APPS SCRIPT URL
+
+        const ALLOWED_EMAIL = "mslvpaul.11@gmail.com";
+
+        const API_URL =
+            "https://script.google.com/macros/s/AKfycbxrwdEP6cRhQTXiVF8zmRqdeKtc6o11yi5hvU2g5-VRBBz4ozgulr-qHftWkUznkg/exec";
+
+
+        // INITIALIZE FIREBASE
+
+        const auth = getAuth(
+            initializeApp(firebaseConfig)
+        );
+
+        const provider = new GoogleAuthProvider();
+
+        const $ = id => document.getElementById(id);
+
+
+        // STATUS MESSAGE FUNCTION
+
+        function status(msg, type = "info") {
+
+            $("status").textContent = msg;
+
+            $("status").className = type;
+
+        }
+
+
+        function clearStatus() {
+
+            $("status").textContent = "";
+
+            $("status").className = "";
+
+        }
+
+
+        // JSONP FUNCTION TO COMMUNICATE WITH APPS SCRIPT
+
+        function jsonp(params) {
+
+            return new Promise((resolve, reject) => {
+
+                const cb =
+                    "cuteFindsCb_" +
+                    crypto.randomUUID().replace(/-/g, "");
+
+                const s = document.createElement("script");
+
+                const u = new URL(API_URL);
+
+                u.search = new URLSearchParams({
+
+                    ...params,
+
+                    callback: cb,
+
+                    _: Date.now()
+
+                });
+
+
+                const timer = setTimeout(
+                    () => finish(
+                        Error("Server did not respond. Check Apps Script deployment.")
+                    ),
+                    15000
+                );
+
+
+                function finish(err, val) {
+
+                    clearTimeout(timer);
+
+                    delete window[cb];
+
+                    s.remove();
+
+                    err
+                        ? reject(err)
+                        : resolve(val);
+
+                }
+
+
+                window[cb] = v => finish(null, v);
+
+                s.onerror = () => finish(
+                    Error("Could not reach Google Apps Script.")
+                );
+
+                s.src = u.toString();
+
+                document.head.appendChild(s);
+
+            });
+
+        }
+
+
+        // GOOGLE SIGN-IN
+
+        $("loginBtn").addEventListener("click", async () => {
+
+            clearStatus();
+
+            $("loginBtn").disabled = true;
+
+            try {
+
+                await setPersistence(
+                    auth,
+                    browserLocalPersistence
+                );
+
+                const r = await signInWithPopup(
+                    auth,
+                    provider
+                );
+
+
+                if (
+                    (r.user.email || "").toLowerCase() !==
+                    ALLOWED_EMAIL
+                ) {
+
+                    await signOut(auth);
+
+                    status(
+                        "Access denied. Use the authorized admin Google account.",
+                        "error"
+                    );
+
+                }
+
+            } catch (e) {
+
+                status(
+                    "Login error: " + e.message,
+                    "error"
+                );
+
+            } finally {
+
+                $("loginBtn").disabled = false;
+
+            }
+
+        });
+
+
+        // CHECK AUTHENTICATION STATUS
+
+        onAuthStateChanged(auth, async u => {
+
+            if (
+                u?.email?.toLowerCase() === ALLOWED_EMAIL
+            ) {
+
+                $("loginPanel").style.display = "none";
+
+                $("adminPanel").style.display = "block";
+
+                $("userInfo").textContent =
+                    "Signed in as " + u.email;
+
+            } else {
+
+                $("loginPanel").style.display = "block";
+
+                $("adminPanel").style.display = "none";
+
+                if (u) {
+
+                    await signOut(auth);
+
+                    status(
+                        "Access denied.",
+                        "error"
+                    );
+
+                }
+
+            }
+
+        });
+
+
+        // LOGOUT
+
+        $("logoutBtn").addEventListener("click", async () => {
+
+            try {
+
+                await signOut(auth);
+
+                $("productForm").reset();
+
+                clearStatus();
+
+            } catch (e) {
+
+                status(
+                    "Logout error: " + e.message,
+                    "error"
+                );
+
+            }
+
+        });
+
+
+        // CONVERT IMAGE TO BASE64
+
+        function fileToBase64(f) {
+
+            return new Promise((resolve, reject) => {
+
+                const r = new FileReader();
+
+                r.onload = () => resolve(
+                    String(r.result).split(",")[1]
+                );
+
+                r.onerror = () => reject(
+                    Error("Could not read image.")
+                );
+
+                r.readAsDataURL(f);
+
+            });
+
+        }
+
+
+        // WAIT FUNCTION
+
+        const wait = ms =>
+            new Promise(r => setTimeout(r, ms));
+
+
+        // CHECK UPLOAD STATUS
+
+        async function poll(id) {
+
+            for (let i = 0; i < 30; i++) {
+
+                await wait(2000);
+
+                const x = await jsonp({
+
+                    action: "status",
+
+                    requestId: id
+
+                });
+
+                if (x.done) {
+
+                    return x;
+
+                }
+
+            }
+
+            throw Error(
+                "Upload is taking longer than expected. Check the Sheet before retrying to avoid a duplicate."
+            );
+
+        }
+
+
+        // PRODUCT UPLOAD FORM
+
+        $("productForm").addEventListener(
+            "submit",
+            async e => {
+
+                e.preventDefault();
+
+                clearStatus();
+
+                const u = auth.currentUser;
+
+
+                if (
+                    !u ||
+                    u.email?.toLowerCase() !== ALLOWED_EMAIL
+                ) {
+
+                    status(
+                        "Please sign in with the authorized account.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const f = $("image").files[0];
+
+
+                if (
+                    !f ||
+                    ![
+                        "image/jpeg",
+                        "image/png",
+                        "image/webp"
+                    ].includes(f.type)
+                ) {
+
+                    status(
+                        "Choose a JPG, PNG or WebP image.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (f.size > 2 * 1024 * 1024) {
+
+                    status(
+                        "Image must be smaller than 2 MB.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const b = $("uploadBtn");
+
+                b.disabled = true;
+
+                b.textContent = "Uploading…";
+
+
+                try {
+
+                    const id =
+                        crypto.randomUUID().replace(/-/g, "");
+
+
+                    // COLLECT PRODUCT INFORMATION
+
+                    const data = {
+
+                        requestId: id,
+
+                        authToken: await u.getIdToken(true),
+
+                        name: $("name").value.trim(),
+
+                        category: $("category").value,
+
+                        description:
+                            $("description").value.trim(),
+
+                        price: $("price").value.trim(),
+
+                        imageBase64:
+                            await fileToBase64(f),
+
+                        imageMimeType: f.type,
+
+                        imageName: f.name,
+
+                        link: $("link").value.trim(),
+
+                        tag: $("tag").value.trim()
+
+                    };
+
+
+                    // SEND PRODUCT TO GOOGLE APPS SCRIPT
+
+                    await fetch(API_URL, {
+
+                        method: "POST",
+
+                        mode: "no-cors",
+
+                        body: new URLSearchParams({
+
+                            payload: JSON.stringify(data)
+
+                        })
+
+                    });
+
+
+                    status(
+                        "Upload sent. Waiting for Google Sheets confirmation…",
+                        "info"
+                    );
+
+
+                    // WAIT FOR SERVER CONFIRMATION
+
+                    const result = await poll(id);
+
+
+                    if (!result.success) {
+
+                        throw Error(
+                            result.error ||
+                            "Server could not save this product."
+                        );
+
+                    }
+
+
+                    // SUCCESS MESSAGE
+
+                    status(
+                        "Product saved successfully to Google Sheets (row " +
+                        result.row +
+                        "). Refresh the storefront to see it.",
+                        "success"
+                    );
+
+
+                    $("productForm").reset();
+
+
+                } catch (err) {
+
+                    status(
+                        "Upload failed: " + err.message,
+
+                        err.message.includes("longer")
+                            ? "info"
+                            : "error"
+                    );
+
+                    console.error(err);
+
+
+                } finally {
+
+                    b.disabled = false;
+
+                    b.textContent = "Upload Product";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
