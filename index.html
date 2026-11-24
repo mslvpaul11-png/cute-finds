@@ -64,6 +64,20 @@ function makeFilters() {
   });
 }
 
+function getDisplayImageUrl(url) {
+  if (!url) return '';
+
+  const match = url.match(/\/d\/([^/]+)/) ||
+                url.match(/[?&]id=([^&]+)/);
+
+  if (match) {
+    return 'https://drive.google.com/thumbnail?id=' +
+      match[1] + '&sz=w1000';
+  }
+
+  return url;
+}
+
 function render() {
   const q = document.getElementById('search').value.toLowerCase();
 
@@ -74,7 +88,7 @@ function render() {
 
   grid.innerHTML = items.map(p => `
     <article class="card">
-      <img src="${p.image}" alt="${p.name}" loading="lazy">
+    <img src="${getDisplayImageUrl(p.image)}" alt="${p.name}" loading="lazy">
       <span class="tag">${p.tag || p.category}</span>
       <h3>${p.name}</h3>
       <p>${p.description}</p>
@@ -124,6 +138,5 @@ makeFilters();
 render();
 loadProducts();
 </script>
-
-let liveProducts=JSON.parse(localStorage.getItem('cuteFindsProducts')||'null')||products;const categories=['All',...new Set(liveProducts.map(p=>p.category))];let selected='All';const filterBox=document.getElementById('filters');const grid=document.getElementById('products');function makeFilters(){filterBox.innerHTML=categories.map(c=>`<button class="filter ${c===selected?'active':''}" data-cat="${c}">${c}</button>`).join('');filterBox.querySelectorAll('button').forEach(b=>b.onclick=()=>{selected=b.dataset.cat;makeFilters();render()})}function render(){let q=document.getElementById('search').value.toLowerCase();let items=liveProducts.filter(p=>(selected==='All'||p.category===selected)&&(`${p.name} ${p.description} ${p.category}`.toLowerCase().includes(q)));grid.innerHTML=items.map(p=>`<article class="card"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="tag">${p.tag||p.category}</span><h3>${p.name}</h3><p>${p.description}</p>${p.price?`<p style="margin-top:8px">${p.price}</p>`:''}<a class="buy" href="${p.link}" target="_blank" rel="nofollow sponsored noopener">Shop the find ↗</a></article>`).join('');if(!items.length)grid.innerHTML='<p>No finds matched your search.</p>'}window.addEventListener('storage',e=>{if(e.key==='cuteFindsProducts'){liveProducts=JSON.parse(e.newValue||'null')||products;selected='All';makeFilters();render()}});document.getElementById('search').addEventListener('input',render);document.getElementById('year').textContent=new Date().getFullYear();makeFilters();render();
-</script></body></html>
+</body>
+</html>
