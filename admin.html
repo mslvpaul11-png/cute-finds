@@ -1,257 +1,450 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cute Finds | Admin</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cute Finds | Admin</title>
 
-<style>
-body{margin:0;background:#f7f4ee;color:#302b26;font-family:Arial,sans-serif}
-main{max-width:650px;margin:25px auto;padding:18px}
-h1,h2{font-family:Georgia,serif;font-weight:normal}
-a{color:inherit}
-.panel{background:#fffdf9;padding:20px;border:1px solid #e4ddd3;border-radius:12px;margin-top:20px}
-label{display:block;font-size:14px;margin:14px 0 6px}
-input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #e4ddd3;border-radius:7px;background:white}
-button{padding:12px 18px;background:#302b26;color:white;border:0;border-radius:7px;margin-top:16px;width:100%;cursor:pointer}
-button:disabled{opacity:.5}
-#status{margin-top:15px;line-height:1.5}
-small{color:#756d63}
-.hidden{display:none}
-</style>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 25px 15px;
+      background: #f7f3ed;
+      color: #3d352e;
+      font-family: Georgia, serif;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 30px;
+      background: #fffdf9;
+      border: 1px solid #e8dfd3;
+      border-radius: 12px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      font-weight: normal;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8a7b6b;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      margin: 17px 0 7px;
+      font-size: 14px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d9cfc2;
+      border-radius: 6px;
+      background: white;
+      font: inherit;
+      color: #3d352e;
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 6px;
+      background: #75634f;
+      color: white;
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5d4e3e;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #logoutBtn {
+      background: #a18f7a;
+      margin-top: 10px;
+    }
+
+    #status {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+      overflow-wrap: anywhere;
+    }
+
+    .success {
+      display: block !important;
+      background: #eaf3e8;
+      color: #315b35;
+    }
+
+    .error {
+      display: block !important;
+      background: #fbe9e7;
+      color: #963b32;
+    }
+
+    .info {
+      display: block !important;
+      background: #f2eee7;
+      color: #675947;
+    }
+
+    #adminPanel {
+      display: none;
+    }
+
+    #loginBtn {
+      display: block;
+    }
+
+    #userInfo {
+      text-align: center;
+      color: #75634f;
+      margin: 15px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #8a7b6b;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+  </style>
 </head>
 
 <body>
-<main>
-<a href="index.html">← View storefront</a>
-<h1>Cute Finds</h1>
-<p>Private product administration</p>
 
-<section class="panel" id="loginPanel">
-<h2>Admin Login</h2>
-<p id="loginStatus">Sign in with your authorized Google account.</p>
-<button id="loginBtn">Sign in with Google</button>
-</section>
+  <div class="container">
+    <h1>Cute Finds</h1>
+    <p class="subtitle">Admin Product Dashboard</p>
 
-<section class="panel hidden" id="adminPanel">
-<h2>Welcome, Admin!</h2>
-<p id="userEmail"></p>
-<button id="logoutBtn">Sign out</button>
+    <div id="loginPanel">
+      <p style="text-align:center;">
+        Sign in with your authorized Google account to manage products.
+      </p>
 
-<hr>
+      <button id="loginBtn" type="button">
+        Sign in with Google
+      </button>
+    </div>
 
-<h2>Add a new product</h2>
+    <div id="adminPanel">
+      <p id="userInfo"></p>
 
-<form id="productForm">
-<label>Product name *</label>
-<input id="name" required placeholder="Ceramic bedside lamp">
+      <form id="productForm">
 
-<label>Category *</label>
-<input id="category" required placeholder="Home, Beauty, Fashion">
+        <label for="name">Product Name *</label>
+        <input
+          type="text"
+          id="name"
+          required
+          placeholder="Example: Ivory Ceramic Table Lamp"
+        >
 
-<label>Description</label>
-<textarea id="description" rows="3"></textarea>
+        <label for="category">Category *</label>
+        <select id="category" required>
+          <option value="">Select category</option>
+          <option value="Home Decor">Home Decor</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Beauty">Beauty</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Kitchen">Kitchen</option>
+          <option value="Lifestyle">Lifestyle</option>
+          <option value="Other">Other</option>
+        </select>
 
-<label>Price</label>
-<input id="price" placeholder="$24.99">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          placeholder="Write a short product description"
+        ></textarea>
 
-<label>Choose product photo *</label>
-<input id="photo" type="file" accept="image/*" required>
-<small>Choose an image from your phone gallery.</small>
+        <label for="price">Price</label>
+        <input
+          type="text"
+          id="price"
+          placeholder="Example: $29.99"
+        >
 
-<label>Amazon affiliate link *</label>
-<input id="link" type="url" required placeholder="Paste your affiliate link">
+        <label for="image">Product Image *</label>
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          required
+        >
+        <p class="note">
+          Choose an image from your device. It will be uploaded to Google Drive.
+        </p>
 
-<label>Tag</label>
-<input id="tag" placeholder="Editor's pick">
+        <label for="link">Amazon Affiliate Link *</label>
+        <input
+          type="url"
+          id="link"
+          required
+          placeholder="Paste your Amazon affiliate link"
+        >
 
-<button id="submitBtn" type="submit">Upload product</button>
-</form>
+        <label for="tag">Tag</label>
+        <input
+          type="text"
+          id="tag"
+          placeholder="Example: Bestseller, New, Trending"
+        >
 
-<p id="status"></p>
-</section>
-</main>
+        <button id="uploadBtn" type="submit">
+          Upload Product
+        </button>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+      </form>
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  setPersistence,
-  browserLocalPersistence,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+      <button id="logoutBtn" type="button">
+        Logout
+      </button>
+    </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB2iH6w2TJsPQs8TX9ZykJ7zAzfz1Fi-dM",
-  authDomain: "cute-finds-admin.firebaseapp.com",
-  projectId: "cute-finds-admin",
-  storageBucket: "cute-finds-admin.firebasestorage.app",
-  messagingSenderId: "161451262975",
-  appId: "1:161451262975:web:8870d4fd6e506dabc15dca",
-  measurementId: "G-DF6C97NFD0"
-};
+    <div id="status" role="status" aria-live="polite"></div>
+  </div>
 
-const ALLOWED_EMAIL = "mslvpaul.11@gmail.com";
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycby-xED-OI6BASpaVbZHD0HKFahPt5kBzId7DkpTqBWs6fOcsxFsulHjGMnenkXnbTWV/exec";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      setPersistence,
+      browserLocalPersistence,
+      onAuthStateChanged,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB2iH6w2TJsPQs8TX9ZykJ7zAzfz1Fi-dM",
+      authDomain: "cute-finds-admin.firebaseapp.com",
+      projectId: "cute-finds-admin",
+      storageBucket: "cute-finds-admin.firebasestorage.app",
+      messagingSenderId: "161451262975",
+      appId: "1:161451262975:web:8870d4fd6e506dabc15dca",
+      measurementId: "G-DF6C97NFD0"
+    };
 
-const loginPanel = document.getElementById("loginPanel");
-const adminPanel = document.getElementById("adminPanel");
-const loginStatus = document.getElementById("loginStatus");
-const form = document.getElementById("productForm");
-const statusBox = document.getElementById("status");
-const submitBtn = document.getElementById("submitBtn");
+    const ALLOWED_EMAIL = "mslvpaul.11@gmail.com";
 
-let currentUser = null;
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycby-xED-OI6BASpaVbZHD0HKFahPt5kBzId7DkpTqBWs6fOcsxFsulHjGMnenkXnbTWV/exec";
 
-await setPersistence(auth, browserLocalPersistence);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-function showLogin(message) {
-  currentUser = null;
-  loginPanel.classList.remove("hidden");
-  adminPanel.classList.add("hidden");
-  loginStatus.textContent = message;
-}
+    const loginPanel = document.getElementById("loginPanel");
+    const adminPanel = document.getElementById("adminPanel");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const productForm = document.getElementById("productForm");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const statusBox = document.getElementById("status");
+    const userInfo = document.getElementById("userInfo");
 
-function showAdmin(user) {
-  currentUser = user;
-  loginPanel.classList.add("hidden");
-  adminPanel.classList.remove("hidden");
-  document.getElementById("userEmail").textContent = user.email;
-}
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  loginStatus.textContent = "Opening Google sign-in...";
-
-  try {
-    const result = await signInWithPopup(auth, provider);
-
-    if (result.user.email.toLowerCase() !== ALLOWED_EMAIL) {
-      await signOut(auth);
-      showLogin("Access denied. This Google account is not authorized.");
-      return;
+    function showStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = type;
     }
 
-    showAdmin(result.user);
-  } catch (error) {
-    showLogin("Login failed: " + error.message);
-  }
-});
+    function clearStatus() {
+      statusBox.textContent = "";
+      statusBox.className = "";
+    }
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
-  form.reset();
-  statusBox.textContent = "";
-  showLogin("You have signed out.");
-});
+    // Google login
+    loginBtn.addEventListener("click", async () => {
+      clearStatus();
+      loginBtn.disabled = true;
 
-onAuthStateChanged(auth, async (user) => {
-  if (user && user.email?.toLowerCase() === ALLOWED_EMAIL) {
-    showAdmin(user);
-  } else {
-    if (user) await signOut(auth);
-    showLogin("Please sign in with the authorized Google account.");
-  }
-});
+      try {
+        await setPersistence(auth, browserLocalPersistence);
 
-function resizeImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+        const result = await signInWithPopup(auth, provider);
+        const email = result.user.email
+          ? result.user.email.toLowerCase()
+          : "";
 
-    reader.onload = () => {
-      const img = new Image();
+        if (email !== ALLOWED_EMAIL) {
+          await signOut(auth);
+          showStatus(
+            "Access denied. This Google account is not authorized.",
+            "error"
+          );
+          return;
+        }
 
-      img.onload = () => {
-        const maxSize = 1200;
-        const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        showStatus("Login successful.", "success");
 
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        resolve(canvas.toDataURL("image/jpeg", 0.8).split(",")[1]);
-      };
-
-      img.onerror = reject;
-      img.src = reader.result;
-    };
-
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  if (!currentUser || currentUser.email.toLowerCase() !== ALLOWED_EMAIL) {
-    statusBox.textContent = "Access denied. Please sign in again.";
-    return;
-  }
-
-  const file = document.getElementById("photo").files[0];
-
-  if (!file) {
-    statusBox.textContent = "Please choose a product photo.";
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Uploading...";
-  statusBox.textContent = "Preparing product image...";
-
-  try {
-    const imageBase64 = await resizeImage(file);
-    const idToken = await currentUser.getIdToken();
-
-    const data = {
-      authToken: idToken,
-      name: document.getElementById("name").value.trim(),
-      category: document.getElementById("category").value.trim(),
-      description: document.getElementById("description").value.trim(),
-      price: document.getElementById("price").value.trim(),
-      link: document.getElementById("link").value.trim(),
-      tag: document.getElementById("tag").value.trim(),
-      imageBase64,
-      imageMimeType: "image/jpeg",
-      imageName: file.name.replace(/\.[^/.]+$/, "") + ".jpg"
-    };
-
-    await fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify(data)
+      } catch (error) {
+        showStatus("Login error: " + error.message, "error");
+      } finally {
+        loginBtn.disabled = false;
+      }
     });
 
-    statusBox.textContent =
-      "Request sent. We will verify the secure uploader in the next step.";
+    // Keep login active after page refresh
+    onAuthStateChanged(auth, async (user) => {
+      if (user && user.email &&
+          user.email.toLowerCase() === ALLOWED_EMAIL) {
 
-    form.reset();
+        loginPanel.style.display = "none";
+        adminPanel.style.display = "block";
+        userInfo.textContent = "Welcome, Admin! " + user.email;
 
-  } catch (error) {
-    statusBox.textContent = "Error: " + error.message;
-  }
+      } else {
+        loginPanel.style.display = "block";
+        adminPanel.style.display = "none";
 
-  submitBtn.disabled = false;
-  submitBtn.textContent = "Upload product";
-});
-</script>
+        if (user) {
+          await signOut(auth);
+          showStatus("Access denied.", "error");
+        }
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        productForm.reset();
+        clearStatus();
+      } catch (error) {
+        showStatus("Logout error: " + error.message, "error");
+      }
+    });
+
+    // Convert image into Base64
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const result = reader.result;
+          const base64 = result.split(",")[1];
+          resolve(base64);
+        };
+
+        reader.onerror = () => {
+          reject(new Error("Could not read the selected image."));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Product upload
+    productForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+
+      const user = auth.currentUser;
+
+      if (!user || !user.email ||
+          user.email.toLowerCase() !== ALLOWED_EMAIL) {
+        showStatus("Please sign in with the authorized account first.", "error");
+        return;
+      }
+
+      const imageFile = document.getElementById("image").files[0];
+
+      if (!imageFile) {
+        showStatus("Please select a product image.", "error");
+        return;
+      }
+
+      if (!imageFile.type.startsWith("image/")) {
+        showStatus("Please select a valid image file.", "error");
+        return;
+      }
+
+      // Keep uploads reasonably small for Apps Script requests
+      if (imageFile.size > 2 * 1024 * 1024) {
+        showStatus("Please choose an image smaller than 2 MB.", "error");
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = "Sending...";
+
+      try {
+        const idToken = await user.getIdToken(true);
+        const imageBase64 = await fileToBase64(imageFile);
+
+        const data = {
+          authToken: idToken,
+          name: document.getElementById("name").value.trim(),
+          category: document.getElementById("category").value,
+          description: document.getElementById("description").value.trim(),
+          price: document.getElementById("price").value.trim(),
+          imageBase64: imageBase64,
+          imageMimeType: imageFile.type,
+          imageName: imageFile.name,
+          link: document.getElementById("link").value.trim(),
+          tag: document.getElementById("tag").value.trim()
+        };
+
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(data)
+        });
+
+        showStatus(
+          "Request sent to the server. Check your Google Sheet for the new product row before uploading another product.",
+          "info"
+        );
+
+      } catch (error) {
+        showStatus("Upload request error: " + error.message, "error");
+
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload Product";
+      }
+    });
+  </script>
+
 </body>
 </html>
 
