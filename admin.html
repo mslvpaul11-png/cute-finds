@@ -1,9 +1,11 @@
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cute Finds | Product Uploader</title>
+<title>Cute Finds | Admin</title>
+
 <style>
 body{margin:0;background:#f7f4ee;color:#302b26;font-family:Arial,sans-serif}
 main{max-width:650px;margin:25px auto;padding:18px}
@@ -11,20 +13,34 @@ h1,h2{font-family:Georgia,serif;font-weight:normal}
 a{color:inherit}
 .panel{background:#fffdf9;padding:20px;border:1px solid #e4ddd3;border-radius:12px;margin-top:20px}
 label{display:block;font-size:14px;margin:14px 0 6px}
-input,textarea,select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #e4ddd3;border-radius:7px;background:white}
+input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #e4ddd3;border-radius:7px;background:white}
 button{padding:12px 18px;background:#302b26;color:white;border:0;border-radius:7px;margin-top:16px;width:100%;cursor:pointer}
 button:disabled{opacity:.5}
 #status{margin-top:15px;line-height:1.5}
 small{color:#756d63}
+.hidden{display:none}
 </style>
 </head>
+
 <body>
 <main>
 <a href="index.html">← View storefront</a>
 <h1>Cute Finds</h1>
-<p>Product uploader</p>
+<p>Private product administration</p>
 
-<section class="panel">
+<section class="panel" id="loginPanel">
+<h2>Admin Login</h2>
+<p id="loginStatus">Sign in with your authorized Google account.</p>
+<button id="loginBtn">Sign in with Google</button>
+</section>
+
+<section class="panel hidden" id="adminPanel">
+<h2>Welcome, Admin!</h2>
+<p id="userEmail"></p>
+<button id="logoutBtn">Sign out</button>
+
+<hr>
+
 <h2>Add a new product</h2>
 
 <form id="productForm">
@@ -35,7 +51,7 @@ small{color:#756d63}
 <input id="category" required placeholder="Home, Beauty, Fashion">
 
 <label>Description</label>
-<textarea id="description" rows="3" placeholder="Short product description"></textarea>
+<textarea id="description" rows="3"></textarea>
 
 <label>Price</label>
 <input id="price" placeholder="$24.99">
@@ -57,12 +73,96 @@ small{color:#756d63}
 </section>
 </main>
 
-<script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-xED-OI6BASpaVbZHD0HKFahPt5kBzId7DkpTqBWs6fOcsxFsulHjGMnenkXnbTWV/exec";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB2iH6w2TJsPQs8TX9ZykJ7zAzfz1Fi-dM",
+  authDomain: "cute-finds-admin.firebaseapp.com",
+  projectId: "cute-finds-admin",
+  storageBucket: "cute-finds-admin.firebasestorage.app",
+  messagingSenderId: "161451262975",
+  appId: "1:161451262975:web:8870d4fd6e506dabc15dca",
+  measurementId: "G-DF6C97NFD0"
+};
+
+const ALLOWED_EMAIL = "mslvpaul.11@gmail.com";
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycby-xED-OI6BASpaVbZHD0HKFahPt5kBzId7DkpTqBWs6fOcsxFsulHjGMnenkXnbTWV/exec";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+const loginPanel = document.getElementById("loginPanel");
+const adminPanel = document.getElementById("adminPanel");
+const loginStatus = document.getElementById("loginStatus");
 const form = document.getElementById("productForm");
 const statusBox = document.getElementById("status");
 const submitBtn = document.getElementById("submitBtn");
+
+let currentUser = null;
+
+await setPersistence(auth, browserLocalPersistence);
+
+function showLogin(message) {
+  currentUser = null;
+  loginPanel.classList.remove("hidden");
+  adminPanel.classList.add("hidden");
+  loginStatus.textContent = message;
+}
+
+function showAdmin(user) {
+  currentUser = user;
+  loginPanel.classList.add("hidden");
+  adminPanel.classList.remove("hidden");
+  document.getElementById("userEmail").textContent = user.email;
+}
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  loginStatus.textContent = "Opening Google sign-in...";
+
+  try {
+    const result = await signInWithPopup(auth, provider);
+
+    if (result.user.email.toLowerCase() !== ALLOWED_EMAIL) {
+      await signOut(auth);
+      showLogin("Access denied. This Google account is not authorized.");
+      return;
+    }
+
+    showAdmin(result.user);
+  } catch (error) {
+    showLogin("Login failed: " + error.message);
+  }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+  form.reset();
+  statusBox.textContent = "";
+  showLogin("You have signed out.");
+});
+
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.email?.toLowerCase() === ALLOWED_EMAIL) {
+    showAdmin(user);
+  } else {
+    if (user) await signOut(auth);
+    showLogin("Please sign in with the authorized Google account.");
+  }
+});
 
 function resizeImage(file) {
   return new Promise((resolve, reject) => {
@@ -82,8 +182,7 @@ function resizeImage(file) {
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        const base64 = canvas.toDataURL("image/jpeg", 0.8).split(",")[1];
-        resolve(base64);
+        resolve(canvas.toDataURL("image/jpeg", 0.8).split(",")[1]);
       };
 
       img.onerror = reject;
@@ -95,8 +194,13 @@ function resizeImage(file) {
   });
 }
 
-form.addEventListener("submit", async function(event) {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (!currentUser || currentUser.email.toLowerCase() !== ALLOWED_EMAIL) {
+    statusBox.textContent = "Access denied. Please sign in again.";
+    return;
+  }
 
   const file = document.getElementById("photo").files[0];
 
@@ -107,19 +211,21 @@ form.addEventListener("submit", async function(event) {
 
   submitBtn.disabled = true;
   submitBtn.textContent = "Uploading...";
-  statusBox.textContent = "Preparing your product image. Please wait...";
+  statusBox.textContent = "Preparing product image...";
 
   try {
     const imageBase64 = await resizeImage(file);
+    const idToken = await currentUser.getIdToken();
 
     const data = {
+      authToken: idToken,
       name: document.getElementById("name").value.trim(),
       category: document.getElementById("category").value.trim(),
       description: document.getElementById("description").value.trim(),
       price: document.getElementById("price").value.trim(),
       link: document.getElementById("link").value.trim(),
       tag: document.getElementById("tag").value.trim(),
-      imageBase64: imageBase64,
+      imageBase64,
       imageMimeType: "image/jpeg",
       imageName: file.name.replace(/\.[^/.]+$/, "") + ".jpg"
     };
@@ -134,7 +240,7 @@ form.addEventListener("submit", async function(event) {
     });
 
     statusBox.textContent =
-      "Upload request sent. Please check your Google Sheet before adding another product. If the row appears, the upload worked!";
+      "Request sent. We will verify the secure uploader in the next step.";
 
     form.reset();
 
@@ -148,3 +254,4 @@ form.addEventListener("submit", async function(event) {
 </script>
 </body>
 </html>
+
